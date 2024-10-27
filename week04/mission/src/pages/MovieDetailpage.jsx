@@ -21,7 +21,7 @@ padding-left:5px;
   background-position: center;
   color: white;
   display: grid;
-  grid-template-rows: 3fr 1.5fr 1.5fr 1.5fr 3fr 7fr;
+  grid-template-rows: 2fr 1.5fr 1.5fr 1.5fr 2fr 7fr;
 `;
 
 const CreditHeader = styled.h1`
@@ -65,8 +65,8 @@ const MovieDetailpage = () => {
           <span>평균 {data.vote_average}</span>
           <span>{data.release_date}</span>
           <span>{data.runtime}분</span>
-          <h2>{data?.tagline}</h2>
-          <span>{data.overview}</span>
+          <h3>{data?.tagline}</h3>
+          <span style={{ width: '800px' }}>{data.overview}</span>
         </MovieBackgroundImg>
       </div>
       <div>
