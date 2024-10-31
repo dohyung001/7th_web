@@ -31,7 +31,16 @@ const Input = styled.input`
   margin-top: 20px;
   margin-bottom: 10px;
 `;
-
+const StyledSubmitButton = styled.button`
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  border-radius: 10px;
+  margin-top: 20px;
+  background-color: rgb(253,4,91);
+  color: white;
+  font-size:20px;
+`;
 const LoginPage_prac = () => {
   const login = useForm({
     initialValue: {
@@ -63,7 +72,7 @@ const LoginPage_prac = () => {
         {login.touched.password && login.errors.password && (
           <div style={{ color: "red" }}>{login.errors.password}</div>
         )}
-        <button onClick={PressLogin}>로그인</button>
+        <StyledSubmitButton onClick={PressLogin}>로그인</StyledSubmitButton>
       </LoginContainer>
     </Background>
   );
