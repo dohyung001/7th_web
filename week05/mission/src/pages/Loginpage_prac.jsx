@@ -1,8 +1,6 @@
-
-/*
 import React, { useState } from "react";
 import styled from "styled-components";
-import useForm from "../hooks/use-form"
+import useForm from "../hooks/use-form";
 import { validateLogin } from "../utils/validate";
 
 const Background = styled.div`
@@ -11,7 +9,6 @@ const Background = styled.div`
   background-color: black;
   color: white;
   padding: 20px;
-
   padding-top: 10%;
   justify-content: center;
 `;
@@ -25,49 +22,51 @@ const LoginContainer = styled.form`
   align-items: center;
 `;
 
+const Input = styled.input`
+  height: 50px;
+  font-family: 'Arial', sans-serif;
+  width: 100%;
+  border-radius: 10px;
+  padding-left: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+`;
+
 const LoginPage_prac = () => {
   const login = useForm({
-    initialValue:{
-      email:'',
-      password:'',
+    initialValue: {
+      email: '',
+      password: '',
     },
-    validate:validateLogin
-  })
-
-  const handleBlur = (name) => {
-    setTouched((touched) => ({
-      ...touched,
-      [name]: true,
-    }));
-  };
-
-  const handleChangeInput = (name, value) => {
-    setValues({ ...values, [name]: value });
-  };
-  console.log(touched)
+    validate: validateLogin
+  });
+  const PressLogin = () => {
+    console.log(login.values);
+  }
   return (
     <Background>
       <LoginContainer>
-        <h1>로그인</h1>
-        <input
+        <Input
           type="email"
-          placeholder="이메일"
-          value={values.email}
-          onBlur={() => handleBlur("email")}
-          onChange={() => handleChangeInput("email", e.target.value)}
+          placeholder="이메일을 입력해주세요!"
+          {...login.getTextInputProps("email")}
         />
-        <input
+        {login.touched.email && login.errors.email && (
+          <div style={{ color: "red" }}>{login.errors.email}</div>
+        )}
+
+        <Input
           type="password"
-          placeholder="비번"
-          value={values.password}
-          onBlur={() => handleBlur("password")}
-          onChange={() => handleChangeInput("password", e.target.value)}
+          placeholder="비밀번호를 입력해주세요!"
+          {...login.getTextInputProps("password")}
         />
-        <button>제출</button>
+        {login.touched.password && login.errors.password && (
+          <div style={{ color: "red" }}>{login.errors.password}</div>
+        )}
+        <button onClick={PressLogin}>로그인</button>
       </LoginContainer>
     </Background>
   );
 };
 
 export default LoginPage_prac;
-*/

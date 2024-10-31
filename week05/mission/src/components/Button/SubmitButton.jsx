@@ -12,8 +12,8 @@ const StyledSubmitButton = styled.button`
   font-size:20px;
 `;
 
-const SubmitButton = ({ label, isvalidate,onBlur }) => (
-  <StyledSubmitButton type="submit" isvalidate={isvalidate} disabled={!isvalidate} onBlur={onBlur}>
+const SubmitButton = ({ label, isvalidate }) => (
+  <StyledSubmitButton type="submit" isvalidate={isvalidate} disabled={!isvalidate}>
     {label}
   </StyledSubmitButton>
 );

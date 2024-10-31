@@ -60,7 +60,7 @@ const LoginPage = () => {
     trigger,
   } = useForm({
     resolver: yupResolver(schema),
-    mode:"onChange"
+    mode: "onChange"
   });
 
   const onSubmit = (data) => {
@@ -78,13 +78,13 @@ const LoginPage = () => {
           placeholder="이메일을 입력해주세요!"
           register={register}
           errors={errors}
-          /*
-          onBlur={() => {
-            handleTouched("email");
-            trigger("email");
-          }}
-          onChange={() => touched.email && trigger("email")}
-          */
+        /*
+        onBlur={() => {
+          handleTouched("email");
+          trigger("email");
+        }}
+        onChange={() => touched.email && trigger("email")}
+        */
         />
 
         <InputField
@@ -93,12 +93,12 @@ const LoginPage = () => {
           placeholder="비밀번호를 입력해주세요!"
           register={register}
           errors={errors}
-          /*onBlur={() => {
-            handleTouched("password");
-            trigger("password");
-          }}
-          onChange={() => touched.password && trigger("password")}
-          */
+        /*onBlur={() => {
+          handleTouched("password");
+          trigger("password");
+        }}
+        onChange={() => touched.password && trigger("password")}
+        */
         />
 
         <SubmitButton label="제출" isvalidate={isValid} />

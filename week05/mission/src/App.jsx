@@ -16,7 +16,7 @@ import UpcomingPage from './pages/moviePages/Upcomingpage.jsx';
 import MovieDetailpage from './pages/MovieDetailpage.jsx'
 
 
-//import Login_prac from './pages/Loginpage_prac.jsx' //실습
+import Login_prac from './pages/Loginpage_prac.jsx' //실습
 const router = createBrowserRouter([
   {
     path: '/',
@@ -61,6 +61,9 @@ const router = createBrowserRouter([
       {
         path: '/movies/:movieId',
         element: <MovieDetailpage />
+      }, {
+        path: '/Login_prac',
+        element: <Login_prac />
       },
 
 

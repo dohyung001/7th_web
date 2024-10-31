@@ -1,26 +1,27 @@
+// 이메일 검사 패턴
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/*const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,9}$/;
+// 유효성 검사 함수
+function validateUser(values) {
+    const errors = {
+        email: '',
+        password: '',
+    };
 
-function validateUser(values){
-    //{email:'aaa@naver.com', password:'1234'}
-    errors = {
-        email:'',
-        password:'',
-
+    if (!emailPattern.test(values.email)) {
+        errors.email = "올바른 이메일 형식이 아닙니다. 다시 확인해주세요";
     }
 
-    if(emailPattern.test(values.email) === false){
-        errors.email = "올바른 이메일 형식이 아닙니다. 다시 확인해주세요"
+    if (values.password.length < 8 || values.password.length > 16) {
+        errors.password = "비밀번호는 8~16자 사이로 입력해주세요";
     }
 
-    if(values.password.length <8 || values.password.length > 16){
-        errors.password = "비밀번호는 8~16자 사이로 입력해주세요"
-    }
+    return errors;
 }
 
-function validateLogin(values){
-    validateUser(values);
+// 로그인 유효성 검사 함수
+function validateLogin(values) {
+    return validateUser(values);
 }
 
-export {validateLogin};
-*/
+export { validateLogin };
