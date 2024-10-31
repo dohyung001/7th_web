@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import InputField from '../components/Input/InputField';  // 새로 만든 InputField 컴포넌트
-import SubmitButton from '../components/Button/SubmitButton';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputField from "../components/Input/InputField";
+import SubmitButton from "../components/Button/SubmitButton";
 
 const Background = styled.div`
   width: 100vw;
@@ -27,10 +27,30 @@ const LoginContainer = styled.form`
 `;
 
 const LoginPage = () => {
-  // 유효성 검사 스키마
+  /*
+  //유효성검사 방식 변경
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
+  });
+
+  const handleTouched = (name) => {
+    setTouched((prevTouched) => ({
+      ...prevTouched,
+      [name]: true,
+    }));
+  };
+*/
   const schema = yup.object().shape({
-    email: yup.string().email("올바른 이메일 형식이 아닙니다! 다시 입력해주세요").required("이메일을 입력해주세요"),
-    password: yup.string().min(8, "비밀번호는 8~16자 사이로 입력해주세요").max(16, "비밀번호는 8~16자 사이로 입력해주세요").required("비밀번호를 입력해주세요"),
+    email: yup
+      .string()
+      .email("올바른 이메일 형식이 아닙니다! 다시 입력해주세요")
+      .required("이메일을 입력해주세요"),
+    password: yup
+      .string()
+      .min(8, "비밀번호는 8~16자 사이로 입력해주세요")
+      .max(16, "비밀번호는 8~16자 사이로 입력해주세요")
+      .required("비밀번호를 입력해주세요"),
   });
 
   const {
@@ -40,8 +60,7 @@ const LoginPage = () => {
     trigger,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode:"onChange"
   });
 
   const onSubmit = (data) => {
@@ -59,6 +78,13 @@ const LoginPage = () => {
           placeholder="이메일을 입력해주세요!"
           register={register}
           errors={errors}
+          /*
+          onBlur={() => {
+            handleTouched("email");
+            trigger("email");
+          }}
+          onChange={() => touched.email && trigger("email")}
+          */
         />
 
         <InputField
@@ -67,9 +93,15 @@ const LoginPage = () => {
           placeholder="비밀번호를 입력해주세요!"
           register={register}
           errors={errors}
+          /*onBlur={() => {
+            handleTouched("password");
+            trigger("password");
+          }}
+          onChange={() => touched.password && trigger("password")}
+          */
         />
 
-        <SubmitButton label="로그인" isvalidate={isValid} />
+        <SubmitButton label="제출" isvalidate={isValid} />
       </LoginContainer>
     </Background>
   );

@@ -9,7 +9,7 @@ const StyledSubmitButton = styled.button`
   margin-top: 20px;
   background-color: ${({ isvalidate }) => (isvalidate ? 'rgb(253,4,91)' : 'gray')};
   color: white;
-  
+  font-size:20px;
 `;
 
 const SubmitButton = ({ label, isvalidate,onBlur }) => (

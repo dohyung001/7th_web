@@ -26,8 +26,8 @@ const LoginContainer = styled.form`
   align-items: center;
 `;
 
-const LoginPage = () => {
-  // 유효성 검사 스키마
+const Signuppage = () => {
+  // 유효성 검사 스키마(yup)
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -49,10 +49,10 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    trigger
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onBlur",
-    reValidateMode: "onChange",
+    mode: "onChange"
   });
 
   const onSubmit = (data) => {
@@ -78,6 +78,7 @@ const LoginPage = () => {
           placeholder="비밀번호를 입력해주세요!"
           register={register}
           errors={errors}
+  
         />
 
         <InputField
@@ -88,10 +89,10 @@ const LoginPage = () => {
           errors={errors}
         />
 
-        <SubmitButton label="회원가입" isvalidate={isValid} />
+        <SubmitButton label="제출" isvalidate={isValid} />
       </LoginContainer>
     </Background>
   );
 };
 
-export default LoginPage;
+export default Signuppage;
