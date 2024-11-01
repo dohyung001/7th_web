@@ -52,6 +52,7 @@ const LoginPage_prac = () => {
   const PressLogin = () => {
     console.log(login.values);
   }
+  console.log(login.getTextInputProps("email"));
   return (
     <Background>
       <LoginContainer>
