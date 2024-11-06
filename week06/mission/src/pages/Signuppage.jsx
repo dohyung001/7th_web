@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import InputField from '../components/Input/InputField';
-import SubmitButton from '../components/Button/SubmitButton';
-
+import React from "react";
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputField from "../components/Input/InputField";
+import SubmitButton from "../components/Button/SubmitButton";
+import axios from "axios";
 const Background = styled.div`
   width: 100vw;
   height: 100vh;
@@ -40,7 +40,7 @@ const Signuppage = () => {
       .required("비밀번호를 입력해주세요"),
     passwordCheck: yup
       .string()
-      .oneOf([yup.ref('password'), null], "비밀번호가 일치하지 않습니다.")
+      .oneOf([yup.ref("password"), null], "비밀번호가 일치하지 않습니다.")
       .required("비밀번호를 다시 입력해주세요"),
   });
 
@@ -49,14 +49,33 @@ const Signuppage = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    trigger
+    trigger,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange"
+    mode: "onTouched",
   });
 
   const onSubmit = (data) => {
     console.log(data);
+    const fetch = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/auth/register",
+          {
+            email: "23423@gmail.com",
+            password: "hihi",
+            passwordCheck: "hihi",
+          }
+        );
+        console.log(response);
+      } catch (error){
+        console.log("에러",error);
+      } finally {
+        console.log("되긴함");
+      }
+      
+    };
+    fetch();
   };
 
   return (
@@ -78,7 +97,6 @@ const Signuppage = () => {
           placeholder="비밀번호를 입력해주세요!"
           register={register}
           errors={errors}
-  
         />
 
         <InputField

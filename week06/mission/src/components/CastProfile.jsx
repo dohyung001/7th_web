@@ -10,7 +10,6 @@ const ProfileImg = styled.img`
 const ProfileCard = styled.div`
 display:flex;
 flex-direction:column;
-justify-contents:center;
 align-items:center;
 width:150px;
 height:150px;
