@@ -27,20 +27,7 @@ const LoginContainer = styled.form`
 `;
 
 const LoginPage = () => {
-  /*
-  //유효성검사 방식 변경
-  const [touched, setTouched] = useState({
-    email: false,
-    password: false,
-  });
 
-  const handleTouched = (name) => {
-    setTouched((prevTouched) => ({
-      ...prevTouched,
-      [name]: true,
-    }));
-  };
-*/
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -60,7 +47,7 @@ const LoginPage = () => {
     trigger,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange"
+    mode: "onTouched"
   });
 
   const onSubmit = (data) => {
@@ -78,13 +65,7 @@ const LoginPage = () => {
           placeholder="이메일을 입력해주세요!"
           register={register}
           errors={errors}
-        /*
-        onBlur={() => {
-          handleTouched("email");
-          trigger("email");
-        }}
-        onChange={() => touched.email && trigger("email")}
-        */
+
         />
 
         <InputField
@@ -93,12 +74,7 @@ const LoginPage = () => {
           placeholder="비밀번호를 입력해주세요!"
           register={register}
           errors={errors}
-        /*onBlur={() => {
-          handleTouched("password");
-          trigger("password");
-        }}
-        onChange={() => touched.password && trigger("password")}
-        */
+
         />
 
         <SubmitButton label="제출" isvalidate={isValid} />

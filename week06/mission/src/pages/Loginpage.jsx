@@ -5,6 +5,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputField from "../components/Input/InputField";
 import SubmitButton from "../components/Button/SubmitButton";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const Background = styled.div`
   width: 100vw;
@@ -27,7 +30,8 @@ const LoginContainer = styled.form`
 `;
 
 const LoginPage = () => {
-
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -52,6 +56,27 @@ const LoginPage = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    const loginFetch = async () => {
+      try {
+        const response = await axios.post("http://localhost:3000/auth/login", {
+          email: data.email,
+          password: data.password,
+        });
+
+        // 토큰 저장
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        const nickname = data.email.split('@')[0];
+        login(nickname);
+        // 페이지 이동
+        navigate("/");
+      } catch (error) {
+        console.log("에러", error);
+      } finally {
+        console.log("되긴함");
+      }
+    };
+    loginFetch();
   };
 
   return (

@@ -15,6 +15,8 @@ import UpcomingPage from './pages/moviePages/Upcomingpage.jsx';
 
 import MovieDetailpage from './pages/MovieDetailpage.jsx'
 
+import { AuthProvider } from './context/AuthContext.jsx';
+
 
 import Login_prac from './pages/Loginpage_prac.jsx' //실습
 const router = createBrowserRouter([
@@ -75,7 +77,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
 
