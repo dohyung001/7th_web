@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { useForm, } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputField from "../components/Input/InputField";
 import SubmitButton from "../components/Button/SubmitButton";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Background = styled.div`
   width: 100vw;
   height: 100vh;
@@ -27,6 +28,7 @@ const LoginContainer = styled.form`
 `;
 
 const Signuppage = () => {
+  const navigate = useNavigate();
   // 유효성 검사 스키마(yup)
   const schema = yup.object().shape({
     email: yup
@@ -57,17 +59,18 @@ const Signuppage = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    const fetch = async () => {
+    const loginFetch = async () => {
       try {
         const response = await axios.post(
           "http://localhost:3000/auth/register",
           {
-            email: "23423@gmail.com",
-            password: "hihi",
-            passwordCheck: "hihi",
+            email: data.email,
+            password: data.password,
+            passwordCheck: data.passwordCheck,
           }
         );
         console.log(response);
+        navigate("/login");
       } catch (error){
         console.log("에러",error);
       } finally {
@@ -75,7 +78,7 @@ const Signuppage = () => {
       }
       
     };
-    fetch();
+    loginFetch();
   };
 
   return (
