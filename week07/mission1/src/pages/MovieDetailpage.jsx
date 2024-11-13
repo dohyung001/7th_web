@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import useCustomFetch from '../hooks/useCustomFetch';
 import styled from 'styled-components';
 import CastProfile from '../components/CastProfile'
-
-
+import { useQuery } from '@tanstack/react-query';
+import useGetMovieDetail from '../hooks/queries/useGetMoiveDetail';
+import useGetMovieCredit from '../hooks/queries/useGetMoiveCredit';
 const Background = styled.div`
   background-color: black;
   width: 100vw;
@@ -43,11 +44,24 @@ const ProfileContainer = styled.div`
 const MovieDetailpage = () => {
   const { movieId } = useParams();
 
-  const { data, isLoading: isLoading1, isError: isError1 } = useCustomFetch(`/movie/${movieId}?language=ko-kr`); //영화 정보
-  console.log(data);
+  const { data, isLoading: isLoading1, isError: isError1} = useQuery({
+    queryFn:()=>useGetMovieDetail({movieId}),
+    queryKey:['movieDetail',movieId],
+    cacheTime: 10000, 
+    staleTime: 10000 
+  })
+  const { data: credits, isLoading: isLoading2, isError: isError2} = useQuery({
+    queryFn:()=>useGetMovieCredit({movieId}),
+    queryKey:['movieCredit',movieId],
+    cacheTime: 10000, 
+    staleTime: 10000 
+  })
 
-  const { data: credits, isLoading: isLoading2, isError: isError2 } = useCustomFetch(`/movie/${movieId}/credits?language=ko-KR`); //credit(배우 정보)
-  console.log(credits);
+  //const { data, isLoading: isLoading1, isError: isError1 } = useCustomFetch(`/movie/${movieId}?language=ko-kr`); //영화 정보
+
+
+  //const { data: credits, isLoading: isLoading2, isError: isError2 } = useCustomFetch(`/movie/${movieId}/credits?language=ko-KR`); //credit(배우 정보)
+
 
   if (isLoading1 || isLoading2) return <h1>Loading...</h1>;
   if (isError1 || isError2) return <h1>에러에요</h1>;

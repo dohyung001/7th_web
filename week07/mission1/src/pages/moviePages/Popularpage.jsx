@@ -1,10 +1,9 @@
 import React from 'react';
 import MoviePoster from '../../components/MoviePoster';
 import styled from 'styled-components';
-import useCustomFetch from '../../hooks/useCustomFetch';
-import useGetMovies from '../../hooks/queries/useGetMovies';
+import SkeletonBox from '../../components/SkeletonBox';
 import { useQuery } from '@tanstack/react-query';
-import useGetInfiniteMovies from '../../hooks/queries/useGetinfiniteMovies';
+import useGetMovies from '../../hooks/queries/useGetMovies';
 
 const GridContainer = styled.div`
   display: grid;
@@ -17,31 +16,29 @@ const GridContainer = styled.div`
   padding: 20px;
 `;
 
-
-
 const PopularPage = () => {
-  //useQuery로 api 데이터 받아오기
+  // useQuery로 api 데이터 받아오기
   const { data: movies, isLoading, isError } = useQuery({
-    queryFn: () => useGetMovies({ category: 'popular', pageParam: 1 }), //fetch함수
-    queryKey: ['movies', 'popular'], //해당 쿼리의 키 설정
-    cacheTime: 10000,  //10초안에 다시 쿼리로 api 요청해도 요청하지 않고 캐시된 데이터를 활용
-    staleTime: 10000   //데이터가 10초간 fresh(신선함) -> stale(상함: 최신화 필요)
-  })
+    queryFn: () => useGetMovies({ category: 'popular', pageParam: 1 }), // fetch함수
+    queryKey: ['movies', 'popular'], // 해당 쿼리의 키 설정
+    cacheTime: 10000,  // 10초 동안 캐시된 데이터 저장
+    staleTime: 10000   // 데이터가 10초간 fresh(신선함) -> stale(상함: 최신화 필요)
+  });
 
-  const { data } = useGetInfiniteMovies('now_playing');
-
-  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>에러</div>;
 
   return (
     <GridContainer>
-      {movies?.results?.length > 0 ? (
-        movies.results.map((movie) => (
-          <MoviePoster movie={movie} key={movie.id} />
-        ))
-      ) : (
-        <div>No movies found</div>
-      )}
+      {isLoading
+        ? Array.from({ length: 9 }).map((_, index) => (
+            <SkeletonBox key={index} /> // SkeletonBox로 로딩 UI 표시
+          ))
+        : movies?.results?.length > 0 
+          ? movies.results.map((movie) => (
+              <MoviePoster movie={movie} key={movie.id} />
+            ))
+          : <div>No movies found</div>
+      }
     </GridContainer>
   );
 };

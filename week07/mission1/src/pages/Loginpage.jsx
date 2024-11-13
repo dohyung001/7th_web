@@ -72,9 +72,7 @@ const LoginPage = () => {
         navigate("/");
       } catch (error) {
         console.log("에러", error);
-      } finally {
-        console.log("되긴함");
-      }
+      } 
     };
     loginFetch();
   };

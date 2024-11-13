@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MoviePage />
+        element: <NowplayingPage />
       },
       {
         path: '/login',

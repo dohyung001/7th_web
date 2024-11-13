@@ -1,30 +1,34 @@
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import useGetUser from '../hooks/queries/useGetUser';
 
 const Navbar = () => {
   const { isLoggedIn, userNickname, login, logout } = useAuth();
+  const token = localStorage.getItem("accessToken");
 
+  //useQuery로 유저 데이터 가져오기
+  const { data, error, isSuccess, isError } = useQuery({
+    queryFn: () => useGetUser(token),
+    queryKey: ['user'],
+    cacheTime: 100000,
+    staleTime: 100000,
+    retry: false,
+  });
+
+
+  //유저 데이터가져오기에 대한 처리
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (token && !userNickname) {
-        try {
-          const response = await axios.get("http://localhost:3000/user/me", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          const nickname = response.data.email.split('@')[0];
-          login(nickname);
-        } catch (error) {
-          console.log("유저 정보를 불러오지 못했습니다.", error);
-          logout();
-        }
-      }
-    };
-    fetchUserData();
-  }, [isLoggedIn, userNickname, login, logout]);
+    if (isSuccess ) {
+      const nickname = data.data.email.split('@')[0];
+      login(nickname);
+    } else if (isError) {
+      //logout();
+      console.log("유저 정보를 불러오지 못했습니다.");
+    }
+  }, [isSuccess, isError]);
 
   return (
     <NavbarContainer>
@@ -43,11 +47,15 @@ const Navbar = () => {
         )}
       </NavButtonContainer>
     </NavbarContainer>
-  )
+  );
 }
 
 export default Navbar;
 
+
+
+
+// 스타일드 컴포넌트 정의
 const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -62,7 +70,7 @@ const WelcomText = styled.div`
   color:white;
   justify-content:center;
   align-items: center;
-`
+`;
 const NavButton = styled(Link)`
   &:hover {
     filter: brightness(0.5);

@@ -1,7 +1,8 @@
-import styled, { keyframes } from "styled-components";
+import styled  from "styled-components";
 import useCustomFetch from "../hooks/useCustomFetch";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import MoviePoster from "../components/MoviePoster";
+import SkeletonBox from "../components/SkeletonBox";
 import debounce from "lodash/debounce";
 
 
@@ -37,16 +38,11 @@ const SearchPage = () => {
           />
           <SearchButton onClick={() => debouncedSubmit(inputValue)}> 검색 </SearchButton>
         </SearchWrapper>
+        
         <CardContainer>
           {isLoading ? (
             Array.from({ length: 9 }).map((_, index) => (
-              <SkeletonBox key={index}>
-                <SkeletonImage />
-                <SkeletonDescription>
-                  <SkeletonTitle />
-                  <SkeletonDate />
-                </SkeletonDescription>
-              </SkeletonBox>
+              <SkeletonBox key={index}/>
             ))
           ) : data?.results?.length > 0 ? (
             data.results.map((movie) => <MoviePoster key={movie.id} movie={movie} />)
@@ -94,52 +90,8 @@ const SearchButton = styled.button`
   background-color: rgb(253, 4, 91);
 `;
 
-const shimmer = keyframes`
-  0% { background-position: -200px 0; }
-  100% { background-position: 200px 0; }
-`;
 
-const SkeletonBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
 
-const SkeletonImage = styled.div`
-  width: 100%;
-  aspect-ratio: 22 / 32;
-  background: linear-gradient(
-    90deg,
-    rgba(200, 200, 200, 0.1) 25%,
-    rgba(200, 200, 200, 0.3) 50%,
-    rgba(200, 200, 200, 0.1) 75%
-  );
-  background-size: 200% 100%;
-  border-radius: 15px;
-  animation: ${shimmer} 1.5s infinite ease-in-out;
-`;
-
-const SkeletonDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const SkeletonTitle = styled.div`
-  width: 70%;
-  height: 16px;
-  background: #444;
-  border-radius: 4px;
-  animation: ${shimmer} 1.5s infinite ease-in-out;
-`;
-
-const SkeletonDate = styled.div`
-  width: 50%;
-  height: 12px;
-  background: #444;
-  border-radius: 4px;
-  animation: ${shimmer} 1.5s infinite ease-in-out;
-`;
 
 const CardContainer = styled.div`
   display: grid;
