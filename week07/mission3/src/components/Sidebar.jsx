@@ -10,17 +10,17 @@ background-color:rgb(19,21,23);
 display:flex;
 flex-direction: column;
 padding-top:20px;
-min-height: 100vh;
+min-height:100vh;
 `
 
 const SidebarMenu = styled(Link)`
 width:100%;
-
 display:flex;
 align-items:center;
 color:white;
 padding:20px;
 gap:10px;
+width:250px;
 text-decoration-line:none;
 `
 const Sidebar = () => {

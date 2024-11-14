@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const PosterContainer = styled.div`
   width: 100%; 
+  min-width:120px;
   position: relative;
   display: flex;
   flex-direction: column; 
@@ -12,7 +13,6 @@ const PosterContainer = styled.div`
 
 const PosterImageWrapper = styled.div`
   width: 100%;
-
   aspect-ratio: 22 / 32; 
   overflow: hidden;
   border-radius: 15px;

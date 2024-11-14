@@ -1,61 +1,102 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import MoviePoster from '../../components/MoviePoster';
-import styled from 'styled-components';
-import useGetInfiniteMovies from '../../hooks/queries/useGetinfiniteMovies';
+import styled, { css } from 'styled-components';
 import SkeletonBox from '../../components/SkeletonBox';
-import { useInView } from 'react-intersection-observer';
-import ClipLoader from "react-spinners/ClipLoader";
-
-const InViewBox = styled.div`
-  margin-top: 50px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-`;
+import { useQuery } from '@tanstack/react-query';
+import useGetMovies from '../../hooks/queries/useGetMovies';
 
 const GridContainer = styled.div`
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(9, 1fr); 
-  width: 100vw;
-  min-height: 100vh;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  width: 100%;
   background-color: black;
   color: white;
   padding: 20px;
+  justify-items: center; 
+`;
+
+const BackGround = styled.div`
+  background-color: black;
+  min-height: 100vh;
+  height:100%;
+  width: calc(100vw - 250px); 
+  position:relative;
+  
+`;
+
+const ButtonContainer = styled.div`
+  position:absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 50px;
+  color: white;
+  transform:translate(-50%); //버튼컨테이너의 50%만큼 이동()
+  left:50%;
+  background-color: black;
+`;
+
+const Button = styled.button`
+  background-color: rgb(253, 4, 91);
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  border: none;
+
+  &:hover {
+    filter: grayscale(0.1);
+    cursor: pointer;
+  }
+  &:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
 `;
 
 const PopularPage = () => {
-  const { data: movies, isLoading, isFetching, hasNextPage, fetchNextPage, isError } = useGetInfiniteMovies('popular');
-  const { ref, inView } = useInView({ threshold: 0 });
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    if (inView && !isFetching && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, isFetching, hasNextPage, fetchNextPage]);
+  // useQuery로 API 데이터 받아오기
+  const { data: movies, isFetching, isError } = useQuery({
+    queryFn: () => useGetMovies({ category: 'popular', pageParam: page }),
+    queryKey: ['movies', 'popular', page],
+    cacheTime: 10000,
+    staleTime: 10000,
+    keepPreviousData: true,
+  });
 
-  if (isError) {
-    return <div>에러가 발생했습니다. 다시 시도해 주세요.</div>;
-  }
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+  };
+
+  if (isError) return <BackGround style={{ color: 'white' }}>에러</BackGround>;
 
   return (
-    <GridContainer>
-      {movies?.pages.map((page) =>
-        page.results.map((movie) => (
-          <MoviePoster movie={movie} key={movie.id} />
-        ))
-      )}
-      {/* 스크롤 감지 상자 */}
-      <InViewBox ref={ref}>
-        {isFetching && <ClipLoader color='red' />}
-      </InViewBox>
-      {/* 로딩 중일 때 SkeletonBox 표시 */}
-      {isFetching &&
-        Array.from({ length: 9 }).map((_, index) => (
-          <SkeletonBox key={`skeleton-${index}`} />
-        ))
-      }
-    </GridContainer>
+    <BackGround>
+      <GridContainer>
+        {isFetching
+          ? Array.from({ length: 9 }).map((_, index) => (
+            <SkeletonBox key={index} />
+          ))
+          : movies?.results?.length > 0
+            ? movies.results.map((movie) => (
+              <MoviePoster movie={movie} key={movie.id} />
+            ))
+            : <div>No movies found</div>
+        }
+      </GridContainer>
+      <ButtonContainer>
+        <Button onClick={handlePrevPage} disabled={page === 1}>이전</Button>
+        <p>{page} 페이지</p>
+        <Button onClick={handleNextPage}>다음</Button>
+      </ButtonContainer>
+    </BackGround>
   );
 };
 

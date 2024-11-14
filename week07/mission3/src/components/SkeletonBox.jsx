@@ -1,13 +1,13 @@
-import styled, { keyframes } from "styled-components";
+import styled,{keyframes} from "styled-components";
 
-const SkeletonBox = () => {
-  return (<MainBox >
-    <SkeletonImage />
-    <SkeletonDescription>
-      <SkeletonTitle />
-      <SkeletonDate />
-    </SkeletonDescription>
-  </MainBox>)
+const SkeletonBox = ()=>{
+    return(<MainBox >
+        <SkeletonImage />
+        <SkeletonDescription>
+          <SkeletonTitle />
+          <SkeletonDate />
+        </SkeletonDescription>
+      </MainBox>)
 }
 
 export default SkeletonBox;
@@ -21,7 +21,10 @@ const MainBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%; 
+  height: 100%; 
 `;
+
 
 const SkeletonImage = styled.div`
   width: 100%;
