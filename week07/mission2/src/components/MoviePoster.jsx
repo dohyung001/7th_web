@@ -12,6 +12,7 @@ const PosterContainer = styled.div`
 
 const PosterImageWrapper = styled.div`
   width: 100%;
+
   aspect-ratio: 22 / 32; 
   overflow: hidden;
   border-radius: 15px;

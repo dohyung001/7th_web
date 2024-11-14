@@ -1,13 +1,13 @@
-import styled,{keyframes} from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const SkeletonBox = ()=>{
-    return(<MainBox >
-        <SkeletonImage />
-        <SkeletonDescription>
-          <SkeletonTitle />
-          <SkeletonDate />
-        </SkeletonDescription>
-      </MainBox>)
+const SkeletonBox = () => {
+  return (<MainBox >
+    <SkeletonImage />
+    <SkeletonDescription>
+      <SkeletonTitle />
+      <SkeletonDate />
+    </SkeletonDescription>
+  </MainBox>)
 }
 
 export default SkeletonBox;
