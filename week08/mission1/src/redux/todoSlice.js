@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   items: [],
@@ -6,7 +6,7 @@ const initialState = {
 }
 
 const todoSlice = createSlice({
-  name: todos,
+  name: 'todos',
   initialState,
   reducers: {
     setInputValue: (state, action) => {
@@ -18,6 +18,13 @@ const todoSlice = createSlice({
         state.inputValue('');
       }
     },
-    remove
+    removeItem: (state, action) => {
+      state.items = state.items.filter((_, index) => {
+        index !== action.payload;
+      })
+    },
   }
-})
+});
+
+export const { setInputValue, addItem, removeItem } = todoSlice.actions;
+export default todoSlice.reducer;

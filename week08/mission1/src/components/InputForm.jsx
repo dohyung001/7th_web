@@ -1,11 +1,29 @@
 import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInputValue, addItem } from '../redux/todoSlice';
 
-const InputForm = ({ }) => {
+const InputForm = () => {
+  const dispatch = useDispatch();
+  const inputValue = useSelector((state) => state.todos.inputValue);
+
+  const handleChange = (e) => {
+    dispatch(setInputValue(e.target.value));
+  }
+  const handleSubmit = () => {
+    dispatch(addItem());
+  };
+
   return (
     <InputContainer>
-      <Input placeholder='제목을 입력해주세요'></Input>
-      <Input placeholder='내용을 입력해주세요'></Input>
-      <SubmitButton>Todo 생성</SubmitButton>
+      <Input
+        placeholder='내용을 입력해주세요'
+        value={inputValue}
+        onChange={handleChange} />
+      <Input
+        placeholder='제목을 입력해주세요'
+
+      />
+      <SubmitButton onClick={handleSubmit}>Todo 생성</SubmitButton>
     </InputContainer>
   )
 }
