@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  items: [],
+  items: [{
+    "title": "고구마 아이스크림 구매하기!",
+    "content": "근데 어디서 팔까요?",
+    "checked": true
+  }],
   inputValue: ''
 }
 
@@ -23,6 +27,11 @@ const todoSlice = createSlice({
         index !== action.payload;
       })
     },
+    reducers: {
+      setTodos: (state, action) => {
+        state.items = action.payload;
+      },
+    }
   }
 });
 
