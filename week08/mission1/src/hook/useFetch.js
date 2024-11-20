@@ -1,43 +1,30 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useFetch = (url, options = {}) => {
+//get만 하는 커스텀 훅
+const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        let response;
-        switch (options.method) {
-          case 'POST':
-            response = await axios.post(url, options.data, options.config);
-            break;
-          case 'PATCH':
-            response = await axios.patch(url, options.data, options.config);
-            break;
-          case 'DELETE':
-            response = await axios.delete(url, options.config);
-            break;
-          case 'GET':
-          default:
-            response = await axios.get(url);
-            break;
-        }
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
     fetchData();
   }, [url]);
 
-  return { data, loading, error };
+  // 데이터를 다시 가져올 수 있도록 하는 refetch
+  return { data, loading, error, refetch: fetchData };
 };
 
 export default useFetch;

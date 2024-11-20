@@ -2,29 +2,42 @@ import styled from "styled-components";
 import InputForm from "../components/InputForm";
 import { useEffect, useState } from "react";
 import ListItem from "./../components/ListItem";
-import axios from "axios";
 import useFetch from "../hook/useFetch";
-import { useDispatch,useSelector } from "react-redux";
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 const TodoPage = () => {
-  const todos = useSelector((state) => state.todos.items);
+  // useFetch 훅을 사용하여 초기 데이터를 가져옴
+  const { data, loading, error, refetch } = useFetch('http://localhost:3000/todo');
+  const [todos, setTodos] = useState([]);
 
-  const {data, loading, error} = useFetch(
-    'http://localhost:3000/todo',
-    {},
-  )
-  console.log(data);
+  // useFetch로 가져온 데이터 설정
+  useEffect(() => {
+    if (data && Array.isArray(data[0])) {
+      setTodos(data[0]);
+    }
+  }, [data]);
+
   return (
     <Background>
       <MainContainer>
-        <Header>🍠 UMC ToDoList 🍠</Header>
-        <InputForm />
-
+        <Header>🍠 UMC ToDoList 🍠</Header>
+        <InputForm onNewTodo={refetch} />
         <ListContainer>
-        {todos.map((todo, index) => (
-              <ListItem key={index} todo={todo} index={index} />
-            ))}
+          {loading ? (<ClipLoader />) :
+            (<>
+              {todos.length > 0 ? (
+                todos.map((todo, index) => (
+                  <ListItem key={index} todo={todo} onNewTodo={refetch} />
+                ))
+              ) : (
+                <p>No Todos Available</p>
+              )}
+            </>)}
         </ListContainer>
+
+
+
       </MainContainer>
     </Background>
   );

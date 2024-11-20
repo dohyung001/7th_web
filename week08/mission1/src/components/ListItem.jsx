@@ -1,20 +1,77 @@
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { removeItem } from '../redux/todoSlice';
+import axiosInstance from '../apis/axiosInstance';
+import { useState } from 'react';
 
-const ListItem = ({ todo, index }) => {
-  const dispatch = useDispatch();
+const ListItem = ({ todo, onNewTodo }) => {
+  const [toggleEdit, setToggleEdit] = useState(false);
+  const [editTitle, setEditTitle] = useState(todo.title);
+  const [editContent, setEditContent] = useState(todo.content);
+  const [isChecked, setIsChecked] = useState(todo.checked);
+  const id = todo.id;
+  //삭제함수
+  const handleDelete = async () => {
+    try {
+      const response = await axiosInstance.delete(`/${id}`);
+      console.log(response);
+      onNewTodo();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  //수정함수
+  const handleEdit = async () => {
+    setToggleEdit(true);
+
+  }
+  //수정완료
+  const submitEdit = async () => {
+    try {
+      const response = await axiosInstance.patch(`/${id}`, {
+        title: editTitle,
+        content: editContent,
+        checked: isChecked
+      });
+      console.log(response);
+      onNewTodo();
+      setToggleEdit(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const hanldeCheckBox = () => {
+    setIsChecked(!isChecked);
+  }
+  const handleChangeTitle = (e) => {
+    setEditTitle(e.target.value);
+  }
+
+  const handleChangeContent = (e) => {
+    setEditContent(e.target.value);
+  }
 
   return (
     <Container>
-      <CheckBox type="checkbox" />
+      <CheckBox type="checkbox" checked={isChecked} onChange={hanldeCheckBox} />
       <TextContainer>
-        <Text>{todo.title}</Text>
-        <Text>{todo.content}</Text>
+        {!toggleEdit ? (<>
+          <Text>{todo.title}</Text>
+          <Text>{todo.content}</Text>
+        </>) : (<>
+          <TextInput value={editTitle} onChange={handleChangeTitle} />
+          <TextInput value={editContent} onChange={handleChangeContent} />
+        </>)}
+
+
       </TextContainer>
       <ButtonContainer>
-        <Button>수정</Button>
-        <Button onClick={() => dispatch(removeItem(index))}>삭제</Button>
+        {!toggleEdit ? (<>
+          <Button onClick={handleEdit}>수정</Button>
+          <Button onClick={handleDelete}>삭제</Button>
+        </>) : (<>
+          <Button onClick={submitEdit}>수정완료</Button>
+        </>)}
       </ButtonContainer>
     </Container>
   );
@@ -39,6 +96,7 @@ const CheckBox = styled.input`
 `;
 const TextContainer = styled.div``;
 const Text = styled.p``;
+const TextInput = styled.input``;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
