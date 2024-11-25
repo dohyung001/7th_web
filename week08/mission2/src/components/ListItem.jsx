@@ -1,74 +1,78 @@
 import styled from 'styled-components';
-import axiosInstance from '../apis/axiosInstance';
 import { useState } from 'react';
+import axiosInstance from '../apis/axiosInstance';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from 'react-router-dom';
 
-
-const ListItem = ({ todo, onNewTodo }) => {
-  const navigate = useNavigate();
+const ListItem = ({ todo }) => {
   const [toggleEdit, setToggleEdit] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editContent, setEditContent] = useState(todo.content);
   const [isChecked, setIsChecked] = useState(todo.checked);
+  const queryClient = useQueryClient();
   const id = todo.id;
+  const navigate = useNavigate();
+  // useMutation으로 삭제
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      return await axiosInstance.delete(`/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoDatas']); // 데이터 새로고침
+    },
+  });
+
+  // useMutation으로 수정
+  const editMutation = useMutation({
+    mutationFn: async () => {
+      return await axiosInstance.patch(`/${id}`, {
+        title: editTitle,
+        content: editContent,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoDatas']); // 데이터 새로고침
+      setToggleEdit(false);
+    },
+  });
+
+  // useMutation으로 체크박스 상태 변경
+  const checkBoxMutation = useMutation({
+    mutationFn: async (newCheckedStatus) => {
+      return await axiosInstance.patch(`/${id}`, {
+        ...todo,
+        checked: newCheckedStatus,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoDatas']); // 데이터 새로고침
+    },
+  });
 
   // 삭제 함수
-  const handleDelete = async () => {
-    try {
-      await axiosInstance.delete(`/${id}`);
-      window.location.reload(); // 새로고침
-    } catch (e) {
-      console.log(e);
-    }
+  const handleDelete = () => {
+    deleteMutation.mutate();
   };
 
-  // 수정 함수
+  // 수정 완료 함수
+  const submitEdit = () => {
+    editMutation.mutate();
+  };
+
+  // 체크박스 상태 변경 함수
+  const handleCheckBoxChange = () => {
+    const newCheckedStatus = !isChecked;
+    setIsChecked(newCheckedStatus);
+    checkBoxMutation.mutate(newCheckedStatus);
+  };
+
+  // 수정 모드 전환
   const handleEdit = () => {
     setToggleEdit(true);
   };
 
-  // 수정 완료
-  const submitEdit = async () => {
-    try {
-      await axiosInstance.patch(`/${id}`, {
-        ...todo,
-        title: editTitle,
-        content: editContent,
-      });
-      onNewTodo();
-      setToggleEdit(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  // 체크박스
-  const handleCheckBoxChange = async () => {
-
-    const newCheckedStatus = !isChecked;
-    setIsChecked(newCheckedStatus); 
-    try {
-      await axiosInstance.patch(`/${id}`, {
-        ...todo,
-        checked: newCheckedStatus,
-      });
-
-    } catch (e) {
-      console.log('에러:', e);
-      setIsChecked(!newCheckedStatus); 
-    } 
-  };
-
-  const handleChangeTitle = (e) => {
-    setEditTitle(e.target.value);
-  };
-
-  const handleChangeContent = (e) => {
-    setEditContent(e.target.value);
-  };
-
   const handleNavigate = ()=>{
-    navigate(`/detail/${todo.id}`)
+    navigate(`/detail/${id}`)
   }
   return (
     <Container>
@@ -81,8 +85,8 @@ const ListItem = ({ todo, onNewTodo }) => {
           </>
         ) : (
           <>
-            <TextInput value={editTitle} onChange={handleChangeTitle} />
-            <TextInput value={editContent} onChange={handleChangeContent} />
+            <TextInput value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+            <TextInput value={editContent} onChange={(e) => setEditContent(e.target.value)} />
           </>
         )}
       </TextContainer>
