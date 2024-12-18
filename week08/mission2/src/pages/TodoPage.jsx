@@ -1,19 +1,16 @@
 import styled from "styled-components";
 import InputForm from "../components/InputForm";
-import { useEffect, useState } from "react";
 import ListItem from "./../components/ListItem";
-import useFetch from "../hook/useFetch";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../apis/axiosInstance";
 
 
 const TodoPage = () => {
   //useQuery 
-  //mutation을 통해 data를 
-  const {data,error,isError,isLoading} = useQuery({
-    queryKey:['todoDatas'],
-    queryFn: async()=>{
+  const { data, error, isError, isLoading } = useQuery({
+    queryKey: ['todoDatas'],
+    queryFn: async () => {
       const response = await axiosInstance.get('http://localhost:3000/todo')
       return response.data[0];
     }
@@ -23,7 +20,7 @@ const TodoPage = () => {
     <Background>
       <MainContainer>
         <Header>🍠 UMC ToDoList 🍠</Header>
-        <InputForm  />
+        <InputForm />
         <ListContainer>
           {isLoading ? (<ClipLoader />) :
             (<>
